@@ -15,23 +15,36 @@ EndFunc
 
 Func HandlePage( $oIE, $page )
 	
-	_IENavigate( $oIE, $page )
+   _IENavigate( $oIE, $page, 0 )
    LogToFile( "_IENavigate to page " & $page )
    
    Local $oRefreshDate = _IEGetObjByName( $oIE, "modify_add_date" )
+   While $oRefreshDate == 0
+	  Sleep( 1000 )
+	  LogToFile( "Sleep for modify_add_date" )
+	  $oRefreshDate = _IEGetObjByName( $oIE, "modify_add_date" )
+   WEnd
    LogToFile( "_IEGetObjByName( modify_add_date )" )
-	_IEAction( $oRefreshDate, "click" )
+   
+   _IEAction( $oRefreshDate, "click" )
 	;_IELoadWait($oIE)
    LogToFile( "_IEAction( click )" )
 
-	Local $oSubmit = _IEGetObjByName( $oIE, "btn_submit" )
+   Local $oSubmit = _IEGetObjByName( $oIE, "btn_submit" )
+   While $oSubmit == 0
+	  Sleep( 1000 )
+	  LogToFile( "Sleep for btn_submit" )
+	  $oSubmit = _IEGetObjByName( $oIE, "btn_submit" )
+   WEnd
    LogToFile( "_IEGetObjByName( btn_submit )" )
-	_IEAction( $oSubmit, "click" )
+   
+   _IEAction( $oSubmit, "click" )
    LogToFile( "_IEAction( click )" )
 	;_IELoadWait($oIE)
-	Sleep( 5000 )
 	
-	_IENavigate( $oIE, "about:blank" )
+   Sleep( 5000 )
+	
+   _IENavigate( $oIE, "about:blank" )
    LogToFile( "_IENavigate to blank page " )
    
 EndFunc
