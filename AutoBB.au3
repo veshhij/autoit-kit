@@ -15,7 +15,7 @@ EndFunc
 
 Func HandlePage( $oIE, $page )
 	
-   _IENavigate( $oIE, $page, 0 )
+   _IENavigate( $oIE, $page )
    LogToFile( "_IENavigate to page " & $page )
    
    Local $oRefreshDate = _IEGetObjByName( $oIE, "modify_add_date" )
@@ -42,10 +42,10 @@ Func HandlePage( $oIE, $page )
    LogToFile( "_IEAction( click )" )
 	;_IELoadWait($oIE)
 	
-   Sleep( 5000 )
+   Sleep( 10 * 1000 )
 	
-   _IENavigate( $oIE, "about:blank" )
-   LogToFile( "_IENavigate to blank page " )
+   ;_IENavigate( $oIE, "about:blank" )
+   ;LogToFile( "_IENavigate to blank page " )
    
 EndFunc
 
@@ -65,6 +65,8 @@ Func _main()
    LogToFile( "------------------------------------------------------------------------------------------" )
    Local $oIE = _IECreate("about:blank")
    LogToFile( "Start IE" )
+   
+   _IELoadWaitTimeout( 15 * 1000 )
    
    For $x = 2 To $aRecords[0]
 	  HandlePage( $oIE, $aRecords[1] & $aRecords[$x] )
