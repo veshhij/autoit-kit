@@ -3,9 +3,21 @@
 #include <IE.au3>
 #include <File.au3>
 
+$LogFileName = "\log.txt"
+
+Func CheckLogFileSize()
+   
+   Local $size = FileGetSize(@ScriptDir & $LogFileName)
+   
+   If $size > 500000 Then
+	  FileDelete(@ScriptDir & $LogFileName)
+   EndIf
+
+EndFunc
+
 Func LogToFile( $Message )
    
-   Local $hFile = FileOpen(@ScriptDir & "\log.txt", 1) ; Open the logfile in write mode.
+   Local $hFile = FileOpen(@ScriptDir & $LogFileName, 1) ; Open the logfile in write mode.
    
    _FileWriteLog($hFile, $Message) ; Write to the logfile passing the filehandle returned by FileOpen.
    
@@ -27,7 +39,6 @@ Func HandlePage( $oIE, $page )
    LogToFile( "_IEGetObjByName( modify_add_date )" )
    
    _IEAction( $oRefreshDate, "click" )
-	;_IELoadWait($oIE)
    LogToFile( "_IEAction( click )" )
 
    Local $oSubmit = _IEGetObjByName( $oIE, "btn_submit" )
@@ -40,15 +51,10 @@ Func HandlePage( $oIE, $page )
    
    _IEAction( $oSubmit, "click" )
    LogToFile( "_IEAction( click )" )
-	;_IELoadWait($oIE)
 	
-   Sleep( 10 * 1000 )
-	
-   ;_IENavigate( $oIE, "about:blank" )
-   ;LogToFile( "_IENavigate to blank page " )
+   Sleep( 20 * 1000 )
    
 EndFunc
-
 
 Func _main()
    If $CmdLine[0] < 1 Then
@@ -61,6 +67,8 @@ Func _main()
 	  MsgBox(4096, "Error", "Error reading parameters")
 	  Exit
    EndIf
+   
+   CheckLogFileSize()
    
    LogToFile( "------------------------------------------------------------------------------------------" )
    Local $oIE = _IECreate("about:blank")
